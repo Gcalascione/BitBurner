@@ -1,0 +1,70 @@
+var script1 = 'HackNoodles.script'
+var server = 'foodnstuff'
+	
+var hackingLevel = getHackingLevel()
+var requiredHackLevel = getServerRequiredHackingLevel(server)
+var portrequired = getServerNumPortsRequired(server)
+
+var portOpenCapab = 0
+
+if (fileExists('BruteSSH.exe', 'home')){
+	portOpenCapab = portOpenCapab + 1
+} 
+
+if (fileExists('FTPCrack.exe', 'home')){
+	portOpenCapab = portOpenCapab + 1
+} 
+
+if (fileExists('relaySMTP.exe', 'home')){
+	portOpenCapab = portOpenCapab + 1
+}
+
+if (fileExists('HTTPWorm.exe', 'home')){
+	portOpenCapab = portOpenCapab + 1
+} 
+
+if (fileExists('SQLInject.exe', 'home')){ 
+	portOpenCapab = portOpenCapab + 1
+}
+
+if (hackingLevel >= requiredHackLevel) {
+	if (portOpenCapab >= portrequired) {
+		if (hasRootAccess(server) == false) {
+			if (portOpenCapab == 1) {
+				brutessh(server)  
+			}
+			if (portOpenCapab == 2) {
+				brutessh(server) 
+				ftpcrack(server)
+			}
+			if (portOpenCapab == 3) {
+				brutessh(server) 
+				ftpcrack(server)
+				relaysmtp(server)
+			}
+			if (portOpenCapab == 4) {
+				brutessh(server) 
+				ftpcrack(server)
+				relaysmtp(server)
+				httpworm(server)
+			}
+			if (portOpenCapab == 5) {
+				brutessh(server) 
+				ftpcrack(server)
+				relaysmtp(server)
+				httpworm(server)
+				sqlinject(server)				
+			}
+			nuke(server);
+		}
+
+		if ((fileExists(script1, server)) == false) {
+			var totalRam = getServerMaxRam(server)
+			var scriptCost = getScriptRam(script1, 'home')
+			var threadCount = (totalRam / scriptCost)
+			scp(script1, 'home', server);
+			exec(script1, server, threadCount);
+		}
+		
+	}
+}
